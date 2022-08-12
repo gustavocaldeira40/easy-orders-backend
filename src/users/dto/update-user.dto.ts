@@ -4,6 +4,8 @@ import { CreateUserDto } from './create-user.dto';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsNotEmpty()
+  @MinLength(4)
+  @MaxLength(20)
   name: string;
 
   @IsNotEmpty()
@@ -14,4 +16,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsNotEmpty()
   @IsEmail()
   email: string;
+
+  @IsNotEmpty()
+  isActive?: boolean;
 }

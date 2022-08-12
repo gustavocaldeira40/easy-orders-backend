@@ -6,7 +6,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import bcrypt from 'bcrypt';
+
+import * as bcrypt from 'bcrypt';
+
+const saltOrRounds = 10;
+const password = 'random_password';
 
 @Entity('users')
 export class UsersEntity {
@@ -26,6 +30,24 @@ export class UsersEntity {
   password: string;
 
   @Column({ nullable: true })
+  address: string;
+
+  @Column({ nullable: true })
+  number: string;
+
+  @Column({ nullable: true })
+  complements: string;
+
+  @Column({ nullable: true })
+  city: string;
+
+  @Column({ nullable: true })
+  state: string;
+
+  @Column({ nullable: true })
+  country: string;
+
+  @Column({ nullable: true })
   birthday?: Date;
 
   @CreateDateColumn({
@@ -43,11 +65,11 @@ export class UsersEntity {
   })
   updatedAt: Date;
 
-  @Column({ type: 'boolean', name: 'is_active', default: true })
+  @Column({ type: 'boolean', name: 'is_active', default: true, nullable: true })
   isActive: boolean;
 
   @BeforeInsert()
-  hashPassword() {
-    this.password = bcrypt.hash(this.password, 10);
+  async hashPassword() {
+    this.password = await bcrypt.hash(password, saltOrRounds);
   }
 }

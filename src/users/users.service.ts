@@ -6,7 +6,7 @@ import {
   Param,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserResponseDefault } from 'src/interfaces/user-response-default';
+import { UserFieldsResponse } from 'src/interfaces/user-fields-response';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -22,10 +22,10 @@ export class UsersService {
   async create(@Body() data: CreateUserDto): Promise<{
     statusCode: HttpStatus;
     message: string;
-    data: UserResponseDefault;
+    data: UserFieldsResponse;
   }> {
-    const user: any = await this.repoUsers.create(data);
-    const saveUser: UserResponseDefault = await this.repoUsers.save(user);
+    const user = await this.repoUsers.create(data);
+    const saveUser: UserFieldsResponse = await this.repoUsers.save(user);
 
     // Seleciona para retorno somente dos campos determinados e necessarios
     const { id, name, nickname, email, isActive } = saveUser;
@@ -43,7 +43,20 @@ export class UsersService {
     data: UsersEntity[];
   }> {
     const users = await this.repoUsers.find({
-      select: ['id', 'email', 'nickname', 'name', 'birthday'],
+      select: [
+        'id',
+        'email',
+        'nickname',
+        'name',
+        'address',
+        'number',
+        'complements',
+        'city',
+        'state',
+        'country',
+        'birthday',
+        'isActive',
+      ],
     });
     return {
       statusCode: HttpStatus.OK,
@@ -59,7 +72,20 @@ export class UsersService {
   }> {
     const users = await this.repoUsers.findOneOrFail({
       where: { id: id },
-      select: ['id', 'email', 'nickname', 'name', 'birthday'],
+      select: [
+        'id',
+        'email',
+        'nickname',
+        'name',
+        'address',
+        'number',
+        'complements',
+        'city',
+        'state',
+        'country',
+        'birthday',
+        'isActive',
+      ],
     });
 
     try {
@@ -77,7 +103,20 @@ export class UsersService {
     await this.repoUsers.update({ id }, data);
     return await this.repoUsers.findOneOrFail({
       where: { id: id },
-      select: ['id', 'email', 'nickname', 'name'],
+      select: [
+        'id',
+        'email',
+        'nickname',
+        'name',
+        'address',
+        'number',
+        'complements',
+        'city',
+        'state',
+        'country',
+        'birthday',
+        'isActive',
+      ],
     });
   }
 
