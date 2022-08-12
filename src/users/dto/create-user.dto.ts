@@ -19,24 +19,6 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  @IsNotEmpty()
-  address: string;
-
-  @IsNotEmpty()
-  number: string;
-
-  @IsNotEmpty()
-  complement: string;
-
-  @IsNotEmpty()
-  state: string;
-
-  @IsNotEmpty()
-  country: string;
-
-  @IsNotEmpty()
-  city: string;
-
   @IsOptional()
   birthday: Date;
 }

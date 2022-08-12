@@ -25,24 +25,6 @@ export class UsersEntity {
   @Column({ select: false })
   password: string;
 
-  @Column({ type: 'string' })
-  address: string;
-
-  @Column({ type: 'string' })
-  number: string;
-
-  @Column({ type: 'string' })
-  complement: string;
-
-  @Column({ type: 'string' })
-  state: string;
-
-  @Column({ type: 'string' })
-  country: string;
-
-  @Column({ type: 'string' })
-  city: string;
-
   @Column({ nullable: true })
   birthday?: Date;
 
