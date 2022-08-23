@@ -32,10 +32,16 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  @Post(':email')
+  @Post('findByEmail/:email')
   async findByEmail(@Param('email') email: string) {
     console.log('TEM EMAIL ', email);
     return this.usersService.findUserByEmail(email);
+  }
+
+  @Post('verifyNickname/:nickname')
+  async verifyNickname(@Param('nickname') nickname: string) {
+    console.log('TEM nickname ', nickname);
+    return this.usersService.verifyNickname(nickname);
   }
 
   @Patch(':id')
