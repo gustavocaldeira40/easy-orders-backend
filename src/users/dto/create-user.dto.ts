@@ -25,6 +25,6 @@ export class CreateUserDto {
   @IsOptional()
   birthday: Date;
 
-  @IsNotEmpty()
+  @IsOptional()
   isActive: boolean;
 }

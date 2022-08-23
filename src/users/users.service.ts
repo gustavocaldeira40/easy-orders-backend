@@ -28,7 +28,9 @@ export class UsersService {
     message: string;
     data: UserFieldsResponse;
   }> {
-    const users = this.repoUsers.findOne({ where: { email: data.email } });
+    const users = await this.repoUsers.findOne({
+      where: { email: data.email },
+    });
 
     if (users) {
       throw new HttpException('User already exists !', HttpStatus.NOT_FOUND);

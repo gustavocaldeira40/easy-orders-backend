@@ -1,34 +1,52 @@
-import { Injectable } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { Repository } from 'typeorm';
+import { Injectable, UnauthorizedException, HttpStatus } from '@nestjs/common';
+import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { LoginDTO } from './dto/login.dto';
 import { UsersEntity } from 'src/users/entities/user.entity';
 
 import * as bcrypt from 'bcrypt';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
+    @InjectRepository(UsersEntity)
+    private repoUsers: Repository<UsersEntity>,
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(data: UsersEntity): Promise<any> {
-    const { email, password } = data;
-    const user = await this.usersService.findUserByEmail(email);
+  async login(authLoginDto: LoginDTO) {
+    const user = await this.validateUser(authLoginDto);
 
-    const passwordCorrect = await bcrypt.compare(user.data.password, password);
+    const payload = {
+      userId: user.data.id,
+    };
 
-    if (passwordCorrect) {
-      const { password, ...result } = user.data;
-      return result;
-    }
-    return null;
-  }
-
-  async login(user: UsersEntity) {
-    const payload = { email: user.email, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
+      statusCode: HttpStatus.OK,
+    };
+  }
+
+  async validateUser(userLoginDto: LoginDTO): Promise<{
+    statusCode: HttpStatus;
+    message: string;
+    data: any;
+  }> {
+    const { email, password } = userLoginDto;
+
+    const user = await this.repoUsers.findOne({ where: { email } });
+
+    const validPassword = await bcrypt.compare(password, user.password);
+
+    if (!(await validPassword)) {
+      throw new UnauthorizedException();
+    }
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Users fetched successfully',
+      data: user,
     };
   }
 }

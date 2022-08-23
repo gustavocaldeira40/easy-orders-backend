@@ -1,11 +1,12 @@
 import {
-  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import * as bcrypt from 'bcrypt';
 
 @Entity('users')
 export class UsersEntity {
@@ -21,7 +22,8 @@ export class UsersEntity {
   @Column({ unique: true })
   email: string;
 
-  @Column({ select: false })
+  // @Column({ select: false })
+  @Column()
   password: string;
 
   @Column({ nullable: true })
@@ -59,6 +61,9 @@ export class UsersEntity {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   updatedAt: Date;
+
+  @Column({ type: 'timestamp', nullable: true, default: null })
+  lastLoginAt: Date | null;
 
   @Column({ type: 'boolean', name: 'is_active', default: true, nullable: true })
   isActive: boolean;
