@@ -7,11 +7,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import * as bcrypt from 'bcrypt';
-
-const saltOrRounds = 10;
-const password = 'random_password';
-
 @Entity('users')
 export class UsersEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -67,9 +62,4 @@ export class UsersEntity {
 
   @Column({ type: 'boolean', name: 'is_active', default: true, nullable: true })
   isActive: boolean;
-
-  @BeforeInsert()
-  async hashPassword() {
-    this.password = await bcrypt.hash(password, saltOrRounds);
-  }
 }

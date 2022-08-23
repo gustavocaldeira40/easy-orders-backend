@@ -32,6 +32,12 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
+  @Post(':email')
+  async findByEmail(@Param('email') email: string) {
+    console.log('TEM EMAIL ', email);
+    return this.usersService.findUserByEmail(email);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);

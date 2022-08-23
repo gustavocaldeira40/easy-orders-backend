@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 // import { configDataBase } from './database/
 import { ConfigModule } from '@nestjs/config';
 import { MySqlDBConfigService } from './database/orm.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { MySqlDBConfigService } from './database/orm.service';
       inject: [MySqlDBConfigService],
     }),
     UsersModule,
+    AuthModule,
   ],
 
   controllers: [],
