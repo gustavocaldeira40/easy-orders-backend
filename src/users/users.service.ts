@@ -111,23 +111,18 @@ export class UsersService {
     }
   }
 
-  async verifyNickname(nickname: string): Promise<{
-    statusCode: HttpStatus;
-    message: string;
-  }> {
-    const response = await this.repoUsers.findOne({
+  async verifyNickname(nickname: string): Promise<boolean> {
+    const user = await this.repoUsers.findOne({
       where: { nickname: nickname },
       select: userQuery as FindOptionsSelect<UsersEntity>,
     });
 
-    if (response) {
-      throw new HttpException('Nickname Used !', HttpStatus.CONFLICT);
+    if (user) {
+      // Nickname not avaliable
+      return false;
     }
-
-    return {
-      statusCode: HttpStatus.OK,
-      message: 'Nickname Avaliable',
-    };
+    // Avaliable Nickname
+    return true;
   }
 
   async update(id: string, data: UpdateUserDto) {
