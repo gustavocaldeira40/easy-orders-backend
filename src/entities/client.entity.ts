@@ -1,4 +1,3 @@
-import { ClientsAddressEntity } from './client-address.entity';
 import {
   Column,
   Entity,
@@ -6,7 +5,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
-  OneToMany,
 } from 'typeorm';
 import { UsersEntity } from './user.entity';
 
@@ -27,6 +25,24 @@ export class ClientsEntity {
   @Column({ nullable: true, unique: true })
   phoneNumber: string;
 
+  @Column({ nullable: true })
+  address: string;
+
+  @Column({ nullable: true })
+  number: string;
+
+  @Column({ nullable: true })
+  complements: string;
+
+  @Column({ nullable: true })
+  city: string;
+
+  @Column({ nullable: true })
+  state: string;
+
+  @Column({ nullable: true })
+  country: string;
+
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamp',
@@ -44,14 +60,4 @@ export class ClientsEntity {
 
   @Column({ type: 'boolean', name: 'is_active', default: true, nullable: true })
   isActive: boolean;
-
-  @OneToMany(
-    () => ClientsAddressEntity,
-    (clients_address) => clients_address.clientId,
-    {
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
-    },
-  )
-  clients_address: ClientsAddressEntity[];
 }

@@ -20,7 +20,7 @@ const saltOrRounds = 10;
 export class UsersService {
   constructor(
     @InjectRepository(UsersEntity)
-    private repoUsers: Repository<UsersEntity>,
+    private repository: Repository<UsersEntity>,
   ) {}
 
   async create(@Body() data: CreateUserDto): Promise<{
@@ -28,7 +28,7 @@ export class UsersService {
     message: string;
     data: UserFieldsResponse;
   }> {
-    const users = await this.repoUsers.findOne({
+    const users = await this.repository.findOne({
       where: { email: data.email },
     });
 
@@ -36,17 +36,16 @@ export class UsersService {
       throw new HttpException('User already exists !', HttpStatus.NOT_FOUND);
     }
 
-    const user = this.repoUsers.create(data);
+    const user = this.repository.create(data);
     user.password = await await bcrypt.hash(user.password, saltOrRounds);
-    const saveUser: UserFieldsResponse = await this.repoUsers.save(user);
+    const saveUser: UserFieldsResponse = await this.repository.save(user);
 
     // Seleciona para retorno somente dos campos determinados e necessarios
-    const { id, name, nickname, email, isActive } = saveUser;
-
+    const { id, ...allFields } = saveUser;
     return {
       statusCode: HttpStatus.OK,
       message: 'User created successfully',
-      data: { id, name, nickname, email, isActive },
+      data: { id, ...allFields },
     };
   }
 
@@ -55,7 +54,9 @@ export class UsersService {
     message: string;
     data: UsersEntity[];
   }> {
-    const users = await this.repoUsers.find({
+    const users = await this.repository.find({
+      where: { isActive: true },
+      order: { lastLoginAt: 'ASC' },
       select: userQuery as FindOptionsSelect<UsersEntity>,
     });
     return {
@@ -70,8 +71,11 @@ export class UsersService {
     message: string;
     data: UsersEntity;
   }> {
-    const users = await this.repoUsers.findOne({
-      where: { id: id },
+    const users = await this.repository.findOne({
+      where: { id: id, isActive: true },
+      order: {
+        lastLoginAt: 'ASC',
+      },
       select: userQuery as FindOptionsSelect<UsersEntity>,
     });
 
@@ -92,8 +96,11 @@ export class UsersService {
     data: UsersEntity;
   }> {
     try {
-      const user = await this.repoUsers.findOne({
-        where: { email },
+      const user = await this.repository.findOne({
+        where: { email, isActive: true },
+        order: {
+          lastLoginAt: 'ASC',
+        },
         select: userQuery as FindOptionsSelect<UsersEntity>,
       });
 
@@ -112,7 +119,7 @@ export class UsersService {
   }
 
   async verifyNickname(nickname: string): Promise<boolean> {
-    const user = await this.repoUsers.findOne({
+    const user = await this.repository.findOne({
       where: { nickname: nickname },
       select: userQuery as FindOptionsSelect<UsersEntity>,
     });
@@ -126,15 +133,15 @@ export class UsersService {
   }
 
   async update(id: number, data: UpdateUserDto) {
-    await this.repoUsers.update({ id }, data);
-    return await this.repoUsers.findOne({
+    await this.repository.update({ id }, data);
+    return await this.repository.findOne({
       where: { id: id },
       select: userQuery as FindOptionsSelect<UsersEntity>,
     });
   }
 
   async remove(id: number) {
-    await this.repoUsers.findOne({ where: { id: id } });
-    this.repoUsers.softDelete({ id });
+    await this.repository.findOne({ where: { id: id } });
+    this.repository.softDelete({ id });
   }
 }
