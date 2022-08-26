@@ -1,5 +1,5 @@
 export interface UserFieldsResponse {
-  id: string;
+  id: number;
   name: string;
   email: string;
   nickname: string;

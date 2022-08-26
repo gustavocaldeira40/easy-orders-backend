@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsOptional } from 'class-validator';
 
-export class LoginDTO {
+export class LoginDto {
   @IsOptional()
   nickname: string;
 

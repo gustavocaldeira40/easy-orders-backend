@@ -1,17 +1,19 @@
+import { SalesEntity } from './sale.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-
-import * as bcrypt from 'bcrypt';
+import { ClientsEntity } from './client.entity';
+import { UsersAddressEntity } from './user-address';
 
 @Entity('users')
 export class UsersEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column({ nullable: false })
   name: string;
@@ -25,24 +27,6 @@ export class UsersEntity {
   // @Column({ select: false })
   @Column()
   password: string;
-
-  @Column({ nullable: true })
-  address: string;
-
-  @Column({ nullable: true })
-  number: string;
-
-  @Column({ nullable: true })
-  complements: string;
-
-  @Column({ nullable: true })
-  city: string;
-
-  @Column({ nullable: true })
-  state: string;
-
-  @Column({ nullable: true })
-  country: string;
 
   @Column({ nullable: true })
   birthday?: Date;
@@ -67,4 +51,26 @@ export class UsersEntity {
 
   @Column({ type: 'boolean', name: 'is_active', default: true, nullable: true })
   isActive: boolean;
+
+  @OneToMany(() => ClientsEntity, (client) => client.userId, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  clients: ClientsEntity[];
+
+  @OneToMany(() => SalesEntity, (sales) => sales.userId, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  sales: SalesEntity[];
+
+  @OneToMany(
+    () => UsersAddressEntity,
+    (users_address) => users_address.userId,
+    {
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    },
+  )
+  users_address: UsersAddressEntity[];
 }

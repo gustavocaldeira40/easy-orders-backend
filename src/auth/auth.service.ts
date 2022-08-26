@@ -1,12 +1,11 @@
 import { Repository } from 'typeorm';
 import { Injectable, UnauthorizedException, HttpStatus } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { LoginDTO } from './dto/login.dto';
-import { UsersEntity } from 'src/users/entities/user.entity';
 
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UsersEntity } from 'src/entities/user.entity';
+import { LoginDto } from 'src/dto/login/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +15,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(authLoginDto: LoginDTO) {
+  async login(authLoginDto: LoginDto) {
     const user = await this.validateUser(authLoginDto);
 
     const payload = {
@@ -29,7 +28,7 @@ export class AuthService {
     };
   }
 
-  async validateUser(userLoginDto: LoginDTO): Promise<{
+  async validateUser(userLoginDto: LoginDto): Promise<{
     statusCode: HttpStatus;
     message: string;
     data: any;

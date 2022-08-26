@@ -20,11 +20,24 @@ export class CreateUserDto {
   email: string;
 
   @IsNotEmpty()
+  @MinLength(6)
+  @MaxLength(50)
   password: string;
 
-  @IsOptional()
-  birthday: Date;
+  address: string;
 
   @IsOptional()
-  isActive: boolean;
+  number?: string;
+
+  @IsOptional()
+  complements?: string;
+
+  city: string;
+
+  state: string;
+
+  country: string;
+
+  @IsOptional()
+  birthday?: Date;
 }

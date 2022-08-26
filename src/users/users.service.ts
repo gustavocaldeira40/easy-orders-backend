@@ -8,11 +8,11 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserFieldsResponse } from 'src/interfaces/user-fields-response';
 import { FindOptionsSelect, Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { UsersEntity } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { userQuery } from 'src/query/users.query';
+import { UsersEntity } from 'src/entities/user.entity';
+import { CreateUserDto } from 'src/dto/user/create-user.dto';
+import { UpdateUserDto } from 'src/dto/user/update-user.dto';
 
 const saltOrRounds = 10;
 
@@ -65,7 +65,7 @@ export class UsersService {
     };
   }
 
-  async findOne(@Param('id') id: string): Promise<{
+  async findOne(@Param('id') id: number): Promise<{
     statusCode: HttpStatus;
     message: string;
     data: UsersEntity;
@@ -125,7 +125,7 @@ export class UsersService {
     return true;
   }
 
-  async update(id: string, data: UpdateUserDto) {
+  async update(id: number, data: UpdateUserDto) {
     await this.repoUsers.update({ id }, data);
     return await this.repoUsers.findOne({
       where: { id: id },
@@ -133,7 +133,7 @@ export class UsersService {
     });
   }
 
-  async remove(id: string) {
+  async remove(id: number) {
     await this.repoUsers.findOne({ where: { id: id } });
     this.repoUsers.softDelete({ id });
   }
