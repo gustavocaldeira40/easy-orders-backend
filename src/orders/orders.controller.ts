@@ -14,6 +14,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { OrdersService } from './orders.service';
+import { OrdersData } from 'src/interfaces/datas.interface';
 
 @Controller('orders')
 export class OrdersController {
@@ -23,6 +24,12 @@ export class OrdersController {
   @UseGuards(JwtAuthGuard)
   create(@Body() createUserDto: CreateOrdersDto) {
     return this.ordersService.create(createUserDto);
+  }
+
+  @Post('/find-with-filter')
+  @UseGuards(JwtAuthGuard)
+  findByStatus(@Body() data: OrdersData) {
+    return this.ordersService.findByStatus(data);
   }
 
   @Get()

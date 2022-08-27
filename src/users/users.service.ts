@@ -43,6 +43,7 @@ export class UsersService {
 
     // Seleciona para retorno somente dos campos determinados e necessarios
     const { id, ...allFields } = saveUser;
+
     return {
       statusCode: HttpStatus.OK,
       message: 'User created successfully',

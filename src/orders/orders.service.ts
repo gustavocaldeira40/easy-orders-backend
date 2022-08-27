@@ -13,6 +13,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ResponseOrdersData } from 'src/interfaces/response-orders.interface';
+import { OrdersData } from 'src/interfaces/datas.interface';
 
 @Injectable()
 export class OrdersService {
@@ -78,6 +79,24 @@ export class OrdersService {
       message: 'Orders fetched successfully',
       data: orders,
     };
+  }
+
+  async findByStatus(@Body() data: OrdersData): Promise<{
+    statusCode: HttpStatus;
+    message: string;
+    data: OrdersEntity[];
+  }> {
+    const orders = await this.repository.find({
+      where: { status: data.status },
+    });
+
+    if (orders) {
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Orders fetched successfully',
+        data: orders,
+      };
+    }
   }
 
   async findOne(@Param('id') id: number): Promise<{

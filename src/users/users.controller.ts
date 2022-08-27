@@ -36,14 +36,14 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  @Post('findByEmail/:email')
+  @Post('find-by-email/:email')
   @UseGuards(JwtAuthGuard)
   async findByEmail(@Param('email') email: string) {
     console.log('TEM EMAIL ', email);
     return this.usersService.findUserByEmail(email);
   }
 
-  @Post('verifyNickname/:nickname')
+  @Post('verify-nickname/:nickname')
   async verifyNickname(@Param('nickname') nickname: string) {
     console.log('TEM nickname ', nickname);
     return this.usersService.verifyNickname(nickname);
