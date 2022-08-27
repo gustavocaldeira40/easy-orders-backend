@@ -1,12 +1,13 @@
+import { AppController } from './app.controller';
+import { OrdersModule } from './orders/orders.module';
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-// import { configDataBase } from './database/
 import { ConfigModule } from '@nestjs/config';
 import { MySqlDBConfigService } from './database/orm.service';
 import { AuthModule } from './auth/auth.module';
 import { ClientsModule } from './clients/clients.module';
-import { SalesModule } from './sales/sales.module';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -18,10 +19,10 @@ import { SalesModule } from './sales/sales.module';
     UsersModule,
     AuthModule,
     ClientsModule,
-    SalesModule,
+    OrdersModule,
   ],
 
-  controllers: [],
-  providers: [],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

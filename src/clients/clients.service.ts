@@ -27,6 +27,13 @@ export class ClientsService {
     message: string;
     data: ClientsEntity;
   }> {
+    // Verify if user don't is inactive
+    const user = await this.userService.findOne(data.userId);
+
+    if (user.data === null) {
+      throw new HttpException('User Not Avaliable !', HttpStatus.NOT_FOUND);
+    }
+
     const reponse = await this.repository.findOne({
       where: { document: data.document, isActive: true },
       relations: { userId: true },
@@ -39,16 +46,8 @@ export class ClientsService {
       );
     }
 
-    // Verify if user don't is inactive
-    const user = await this.userService.findOne(data.userId);
-
-    if (user.data === null) {
-      throw new HttpException('User Not Avaliable !', HttpStatus.NOT_FOUND);
-    }
-
     const client = await this.repository.create(data);
 
-    console.log('CREEATEEE', client);
     const saveClient = await this.repository.save(client);
 
     return {
@@ -80,16 +79,20 @@ export class ClientsService {
     message: string;
     data: ClientsEntity;
   }> {
-    const clients = await this.repository.findOne({
+    const client = await this.repository.findOne({
       relations: { userId: true },
       where: { id: id, isActive: true },
       order: { createdAt: 'ASC' },
     });
 
+    if (!client) {
+      throw new HttpException('Client not found !', HttpStatus.NOT_FOUND);
+    }
+
     return {
       statusCode: HttpStatus.OK,
-      message: 'Clients fetched successfully',
-      data: clients,
+      message: 'Client fetched successfully',
+      data: client,
     };
   }
 

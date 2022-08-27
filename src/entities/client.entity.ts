@@ -1,3 +1,4 @@
+import { OrdersEntity } from './orders.entity';
 import {
   Column,
   Entity,
@@ -5,6 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { UsersEntity } from './user.entity';
 
@@ -60,4 +62,11 @@ export class ClientsEntity {
 
   @Column({ type: 'boolean', name: 'is_active', default: true, nullable: true })
   isActive: boolean;
+
+  @OneToMany(() => OrdersEntity, (orders) => orders.clientId, {
+    eager: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  orders: OrdersEntity[];
 }

@@ -58,9 +58,10 @@ export class UsersService {
     const users = await this.repository.find({
       where: { isActive: true },
       order: { lastLoginAt: 'ASC' },
-      relations: { clients: true },
+      relations: { clients: true, orders: true },
       select: userQuery as FindOptionsSelect<UsersEntity>,
     });
+
     return {
       statusCode: HttpStatus.OK,
       message: 'Users fetched successfully',
@@ -73,23 +74,23 @@ export class UsersService {
     message: string;
     data: UsersEntity;
   }> {
-    const users = await this.repository.findOne({
+    const user = await this.repository.findOne({
       where: { id: id, isActive: true },
       order: {
-        lastLoginAt: 'ASC',
+        name: 'ASC',
       },
       select: userQuery as FindOptionsSelect<UsersEntity>,
     });
 
-    try {
-      return {
-        statusCode: HttpStatus.OK,
-        message: 'Users fetched successfully',
-        data: users,
-      };
-    } catch (error) {
+    if (!user) {
       throw new HttpException('User not found !', HttpStatus.NOT_FOUND);
     }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Users fetched successfully',
+      data: user,
+    };
   }
 
   async findUserByEmail(email: string): Promise<{

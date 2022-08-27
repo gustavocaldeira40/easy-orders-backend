@@ -1,4 +1,5 @@
-import { SalesEntity } from './sale.entity';
+import { OrdersEntity } from './orders.entity';
+
 import {
   Column,
   CreateDateColumn,
@@ -68,14 +69,16 @@ export class UsersEntity {
   isActive: boolean;
 
   @OneToMany(() => ClientsEntity, (client) => client.userId, {
+    eager: true,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   clients: ClientsEntity[];
 
-  @OneToMany(() => SalesEntity, (sales) => sales.userId, {
+  @OneToMany(() => OrdersEntity, (order) => order.userId, {
+    eager: true,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  sales: SalesEntity[];
+  orders: OrdersEntity[];
 }

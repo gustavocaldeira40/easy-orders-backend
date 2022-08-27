@@ -1,28 +1,31 @@
-import { StatusSales } from 'src/models/status-sales.models';
+import { StatusSales } from 'src/types/status-sales.models';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ClientsEntity } from './client.entity';
+import { UsersEntity } from './user.entity';
 
-@Entity('sales')
-export class SalesEntity {
-  @PrimaryGeneratedColumn('uuid')
+@Entity('orders')
+export class OrdersEntity {
+  @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: false })
+  @ManyToOne(() => ClientsEntity, (client) => client.orders)
   clientId: number;
 
-  @Column({ nullable: true })
+  @ManyToOne(() => UsersEntity, (user) => user.orders)
   userId: number;
 
   @Column({ nullable: false })
   product: string;
 
   @Column({ nullable: false })
-  sales_value: string;
+  salesValue: string;
 
   @Column({ default: 'Waiting' })
   status: StatusSales;

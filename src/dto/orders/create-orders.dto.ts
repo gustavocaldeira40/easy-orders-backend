@@ -1,7 +1,8 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class CreateSalesDto {
+export class CreateOrdersDto {
   @IsNumber()
+  @IsOptional()
   clientId: number;
 
   @IsNumber()
@@ -11,8 +12,9 @@ export class CreateSalesDto {
   product: string;
 
   @IsString()
-  sales_value: string;
+  salesValue: string;
 
   @IsString()
+  @IsOptional()
   status: 'Waiting' | 'Approved';
 }
