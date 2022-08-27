@@ -1,4 +1,4 @@
-export interface UserFieldsResponse {
+export interface ResponseUsersData {
   id: number;
   name: string;
   email: string;

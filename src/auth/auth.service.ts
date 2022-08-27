@@ -11,7 +11,7 @@ import { LoginDto } from 'src/dto/login/login.dto';
 export class AuthService {
   constructor(
     @InjectRepository(UsersEntity)
-    private repoUsers: Repository<UsersEntity>,
+    private repository: Repository<UsersEntity>,
     private jwtService: JwtService,
   ) {}
 
@@ -35,13 +35,20 @@ export class AuthService {
   }> {
     const { email, password } = userLoginDto;
 
-    const user = await this.repoUsers.findOne({ where: { email } });
+    const user = await this.repository.findOne({ where: { email } });
 
     const validPassword = await bcrypt.compare(password, user.password);
 
     if (!(await validPassword)) {
       throw new UnauthorizedException();
     }
+
+    if (await validPassword) {
+      user.lastLoginAt = new Date();
+      // Save the field lastLoginAt
+      await this.repository.save(user);
+    }
+
     return {
       statusCode: HttpStatus.OK,
       message: 'Users fetched successfully',

@@ -1,27 +1,25 @@
-import {
-  IsNumber,
-  IsOptional,
-  IsPhoneNumber,
-  IsString,
-  Matches,
-} from 'class-validator';
+import { IsNumber, IsOptional, IsString, Matches } from 'class-validator';
 
 export class CreateClientsDto {
   @IsNumber()
   userId: number;
 
   @IsString()
-  social_reason: string;
+  socialReason: string;
 
-  @Matches(/^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$/, {
-    message: 'Check that the document was inserted correctly',
-  })
+  @Matches(
+    /(^\d{3}\.\d{3}\.\d{3}\-\d{2}$)|(^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$)/,
+    {
+      message: 'Check that the document was inserted correctly',
+    },
+  )
   document: string;
 
   @IsOptional()
-  @IsPhoneNumber(null)
+  // @IsPhoneNumber(null)
   phoneNumber?: string;
 
+  @IsOptional()
   address: string;
 
   @IsOptional()
@@ -30,9 +28,12 @@ export class CreateClientsDto {
   @IsOptional()
   complements?: string;
 
+  @IsOptional()
   city: string;
 
+  @IsOptional()
   state: string;
 
+  @IsOptional()
   country: string;
 }

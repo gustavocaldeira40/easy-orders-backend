@@ -4,9 +4,10 @@ import {
   HttpStatus,
   Injectable,
   Param,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserFieldsResponse } from 'src/interfaces/user-fields-response';
+import { ResponseUsersData } from 'src/interfaces/response-users.interface';
 import { FindOptionsSelect, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { userQuery } from 'src/query/users.query';
@@ -26,19 +27,19 @@ export class UsersService {
   async create(@Body() data: CreateUserDto): Promise<{
     statusCode: HttpStatus;
     message: string;
-    data: UserFieldsResponse;
+    data: ResponseUsersData;
   }> {
     const users = await this.repository.findOne({
       where: { email: data.email },
     });
 
     if (users) {
-      throw new HttpException('User already exists !', HttpStatus.NOT_FOUND);
+      throw new HttpException('User already exists !', HttpStatus.CONFLICT);
     }
 
     const user = this.repository.create(data);
     user.password = await await bcrypt.hash(user.password, saltOrRounds);
-    const saveUser: UserFieldsResponse = await this.repository.save(user);
+    const saveUser: ResponseUsersData = await this.repository.save(user);
 
     // Seleciona para retorno somente dos campos determinados e necessarios
     const { id, ...allFields } = saveUser;
@@ -57,6 +58,7 @@ export class UsersService {
     const users = await this.repository.find({
       where: { isActive: true },
       order: { lastLoginAt: 'ASC' },
+      relations: { clients: true },
       select: userQuery as FindOptionsSelect<UsersEntity>,
     });
     return {
@@ -133,7 +135,11 @@ export class UsersService {
   }
 
   async update(id: number, data: UpdateUserDto) {
-    await this.repository.update({ id }, data);
+    const user = await this.repository.update({ id }, data);
+
+    if (!user) {
+      throw new NotFoundException();
+    }
     return await this.repository.findOne({
       where: { id: id },
       select: userQuery as FindOptionsSelect<UsersEntity>,
@@ -141,7 +147,14 @@ export class UsersService {
   }
 
   async remove(id: number) {
-    await this.repository.findOne({ where: { id: id } });
-    this.repository.softDelete({ id });
+    const user = await this.repository.findOne({ where: { id: id } });
+    if (!user) {
+      throw new HttpException('User Not Found !', HttpStatus.NOT_FOUND);
+    }
+
+    user.isActive = false;
+
+    await this.repository.save(user);
+    return 'Sucessfully';
   }
 }

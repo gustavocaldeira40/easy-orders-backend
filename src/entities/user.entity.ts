@@ -8,7 +8,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ClientsEntity } from './client.entity';
-
 @Entity('users')
 export class UsersEntity {
   @PrimaryGeneratedColumn()
@@ -23,7 +22,6 @@ export class UsersEntity {
   @Column({ unique: true })
   email: string;
 
-  // @Column({ select: false })
   @Column()
   password: string;
 
@@ -63,8 +61,8 @@ export class UsersEntity {
   })
   updatedAt: Date;
 
-  @Column({ type: 'timestamp', nullable: true, default: null })
-  lastLoginAt: Date | null;
+  @Column({ nullable: true })
+  lastLoginAt: Date;
 
   @Column({ type: 'boolean', name: 'is_active', default: true, nullable: true })
   isActive: boolean;

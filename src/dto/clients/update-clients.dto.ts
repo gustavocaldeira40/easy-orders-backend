@@ -4,7 +4,7 @@ import { CreateClientsDto } from './create-clients.dto';
 
 export class UpdateClientDto extends PartialType(CreateClientsDto) {
   @IsString()
-  social_reason: string;
+  socialReason: string;
 
   @Matches(/^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$/, {
     message: 'Check that the document was inserted correctly',
