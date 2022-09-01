@@ -15,8 +15,8 @@ export class ClientsEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => UsersEntity, (user) => user.clients)
-  userId: number;
+  @ManyToOne(() => UsersEntity, (user) => user.id)
+  user: UsersEntity;
 
   @Column({ name: 'social_reason', nullable: false, unique: true })
   socialReason: string;

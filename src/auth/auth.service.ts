@@ -1,3 +1,4 @@
+import { UserFieldsResponse } from './../../dist/interfaces/user-fields-response.d';
 import { Repository } from 'typeorm';
 import { Injectable, UnauthorizedException, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -16,28 +17,32 @@ export class AuthService {
   ) {}
 
   async login(authLoginDto: LoginDto) {
-    const user = await this.validateUser(authLoginDto);
+    const { data } = await this.validateUser(authLoginDto);
 
     const payload = {
-      userId: user.data.id,
+      userId: data.id,
     };
 
     return {
+      user: data,
       access_token: this.jwtService.sign(payload),
-      statusCode: HttpStatus.OK,
     };
   }
 
   async validateUser(userLoginDto: LoginDto): Promise<{
     statusCode: HttpStatus;
     message: string;
-    data: any;
+    data: UserFieldsResponse;
   }> {
-    const { email, password } = userLoginDto;
+    const user: UsersEntity = await this.repository.findOne({
+      where: { email: userLoginDto.email, nickname: userLoginDto.nickname },
+    });
 
-    const user = await this.repository.findOne({ where: { email } });
 
-    const validPassword = await bcrypt.compare(password, user.password);
+    const validPassword = await bcrypt.compare(
+      userLoginDto.password,
+      user.password,
+    );
 
     if (!(await validPassword)) {
       throw new UnauthorizedException();
@@ -49,10 +54,42 @@ export class AuthService {
       await this.repository.save(user);
     }
 
+    const {
+      id,
+      name,
+      nickname,
+      email,
+      address,
+      number,
+      complements,
+      city,
+      state,
+      country,
+      clients,
+      orders,
+      birthday,
+      isActive,
+    } = user;
+
     return {
       statusCode: HttpStatus.OK,
       message: 'Users fetched successfully',
-      data: user,
+      data: {
+        id,
+        name,
+        nickname,
+        email,
+        address,
+        number,
+        complements,
+        city,
+        state,
+        country,
+        clients,
+        orders,
+        birthday,
+        isActive,
+      } as UserFieldsResponse,
     };
   }
 }

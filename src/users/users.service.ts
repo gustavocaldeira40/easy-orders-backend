@@ -42,12 +42,40 @@ export class UsersService {
     const saveUser: ResponseUsersData = await this.repository.save(user);
 
     // Seleciona para retorno somente dos campos determinados e necessarios
-    const { id, ...allFields } = saveUser;
+    const {
+      id,
+      name,
+      email,
+      nickname,
+      address,
+      number,
+      complements,
+      city,
+      state,
+      country,
+      clients,
+      orders,
+      isActive,
+    } = saveUser;
 
     return {
       statusCode: HttpStatus.OK,
       message: 'User created successfully',
-      data: { id, ...allFields },
+      data: {
+        id,
+        name,
+        email,
+        nickname,
+        address,
+        number,
+        complements,
+        city,
+        state,
+        country,
+        clients,
+        orders,
+        isActive,
+      },
     };
   }
 

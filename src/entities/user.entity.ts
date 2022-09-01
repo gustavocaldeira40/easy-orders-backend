@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -68,11 +69,12 @@ export class UsersEntity {
   @Column({ type: 'boolean', name: 'is_active', default: true, nullable: true })
   isActive: boolean;
 
-  @OneToMany(() => ClientsEntity, (client) => client.userId, {
+  @OneToMany((type) => ClientsEntity, (client) => client.user, {
     eager: true,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
+  @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
   clients: ClientsEntity[];
 
   @OneToMany(() => OrdersEntity, (order) => order.userId, {

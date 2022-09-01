@@ -1,3 +1,5 @@
+import { ClientsEntity } from 'src/entities/client.entity';
+import { OrdersEntity } from 'src/entities/orders.entity';
 export interface ResponseUsersData {
   id: number;
   name: string;
@@ -5,9 +7,11 @@ export interface ResponseUsersData {
   nickname: string;
   address?: string;
   number?: string;
-  complement?: string;
+  complements?: string;
   city?: string;
   state?: string;
   country?: string;
+  clients: ClientsEntity[];
+  orders: OrdersEntity[];
   isActive: boolean;
 }

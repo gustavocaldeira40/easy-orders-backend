@@ -31,7 +31,13 @@ export class ClientsController {
     return this.clientsService.findAll();
   }
 
-  @Get()
+  @Get('find-by-user/:id')
+  @UseGuards(JwtAuthGuard)
+  findByUser(@Param('id') id: number) {
+    return this.clientsService.findByUser(id);
+  }
+
+  @Get(':id')
   @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: number) {
     return this.clientsService.findOne(id);

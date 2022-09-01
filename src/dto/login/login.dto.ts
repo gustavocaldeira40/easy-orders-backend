@@ -4,8 +4,8 @@ export class LoginDto {
   @IsOptional()
   nickname: string;
 
-  @IsNotEmpty()
   @IsEmail()
+  @IsOptional()
   email: string;
 
   @IsNotEmpty()
