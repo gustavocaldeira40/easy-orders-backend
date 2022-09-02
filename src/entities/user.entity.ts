@@ -69,7 +69,7 @@ export class UsersEntity {
   @Column({ type: 'boolean', name: 'is_active', default: true, nullable: true })
   isActive: boolean;
 
-  @OneToMany((type) => ClientsEntity, (client) => client.user, {
+  @OneToMany((type) => ClientsEntity, (client) => client.userId, {
     eager: true,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',

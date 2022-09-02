@@ -20,7 +20,7 @@ export class ClientsService {
     private repository: Repository<ClientsEntity>,
 
     private userService: UsersService,
-  ) {}
+  ) { }
 
   async create(@Body() data: CreateClientsDto): Promise<{
     statusCode: HttpStatus;
@@ -28,7 +28,7 @@ export class ClientsService {
     data: ClientsEntity;
   }> {
     // Verify if user don't is inactive
-    const user = await this.userService.findOne(data.userId);
+    const user = await this.userService.findOne(Number(data.userId));
 
     if (user.data === null) {
       throw new HttpException('User Not Avaliable !', HttpStatus.NOT_FOUND);
@@ -78,7 +78,9 @@ export class ClientsService {
     data: ClientsEntity[];
   }> {
     const client = await this.repository.find({
-      where: { user: { id: id }, isActive: true },
+      where: { userId: { id }, isActive: true },
+      order: { createdAt: 'DESC' },
+      take: 10
     });
 
     if (!client) {

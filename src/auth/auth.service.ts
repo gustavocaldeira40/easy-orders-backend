@@ -38,7 +38,6 @@ export class AuthService {
       where: { email: userLoginDto.email, nickname: userLoginDto.nickname },
     });
 
-
     const validPassword = await bcrypt.compare(
       userLoginDto.password,
       user.password,
