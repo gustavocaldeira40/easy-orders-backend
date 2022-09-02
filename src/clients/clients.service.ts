@@ -75,10 +75,10 @@ export class ClientsService {
   async findByUser(@Param('id') id: number): Promise<{
     statusCode: HttpStatus;
     message: string;
-    data: ClientsEntity;
+    data: ClientsEntity[];
   }> {
-    const client = await this.repository.findOne({
-      where: { user: { id: id } },
+    const client = await this.repository.find({
+      where: { user: { id: id }, isActive: true },
     });
 
     if (!client) {
