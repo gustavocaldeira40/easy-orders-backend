@@ -20,7 +20,8 @@ export class ClientsService {
     private repository: Repository<ClientsEntity>,
 
     private userService: UsersService,
-  ) { }
+  ) // eslint-disable-next-line prettier/prettier
+  {}
 
   async create(@Body() data: CreateClientsDto): Promise<{
     statusCode: HttpStatus;
@@ -80,7 +81,7 @@ export class ClientsService {
     const client = await this.repository.find({
       where: { userId: { id }, isActive: true },
       order: { createdAt: 'DESC' },
-      take: 10
+      take: 10,
     });
 
     if (!client) {
@@ -124,15 +125,33 @@ export class ClientsService {
   }
 
   async update(id: number, data: UpdateClientDto) {
-    const client = await this.repository.update({ id }, data);
+    const clientField = await this.repository.findOne({ where: { id } });
 
-    if (!client) {
-      throw new NotFoundException();
-    }
+    // Verifing if have any different between old and new
+    const formData = {
+      userId: data?.userId,
+      socialReason: data?.socialReason,
+      document:
+        clientField?.document === data?.document
+          ? clientField?.document
+          : data?.document,
+      phoneNumber:
+        clientField?.phoneNumber === data?.phoneNumber
+          ? clientField?.phoneNumber
+          : data?.phoneNumber,
+      address: data?.address,
+      number: data?.number,
+      complements: data?.complements,
+      city: data?.city,
+      state: data?.state,
+      ...data,
+    };
+    await this.repository.update({ id }, formData);
 
-    return await this.repository.findOne({
-      where: { id: id },
-    });
+    return {
+      status: 200,
+      message: 'Sucessfully',
+    };
   }
 
   async remove(id: number) {

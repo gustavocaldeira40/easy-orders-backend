@@ -1,18 +1,28 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsOptional, IsPhoneNumber, IsString, Matches } from 'class-validator';
+import {
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+  Matches,
+  MaxLength,
+} from 'class-validator';
 import { CreateClientsDto } from './create-clients.dto';
 
 export class UpdateClientDto extends PartialType(CreateClientsDto) {
   @IsString()
   socialReason: string;
 
-  @Matches(/^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$/, {
-    message: 'Check that the document was inserted correctly',
-  })
+  @Matches(
+    /^([0-9]{2}|[0-9]{2}\.?[0-9]{3}\.?[0-9]{3}\/?[0-9]{4}\-?[0-9]{2})$/,
+    {
+      message: 'Check that the document was inserted correctly',
+    },
+  )
   document: string;
 
   @IsOptional()
-  @IsPhoneNumber(null)
+  // @IsPhoneNumber(null)
+  @MaxLength(11)
   phoneNumber?: string;
 
   address: string;
