@@ -26,10 +26,10 @@ export class OrdersController {
     return this.ordersService.create(createUserDto);
   }
 
-  @Post('/find-with-filter')
+  @Post('/find-by-user')
   @UseGuards(JwtAuthGuard)
   findByStatus(@Body() data: OrdersData) {
-    return this.ordersService.findByStatus(data);
+    return this.ordersService.findByUser(data);
   }
 
   @Get()

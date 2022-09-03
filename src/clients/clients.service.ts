@@ -88,7 +88,7 @@ export class ClientsService {
       return {
         statusCode: HttpStatus.OK,
         message: "There're no registered customers",
-        data: null,
+        data: [],
       };
     }
 

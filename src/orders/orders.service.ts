@@ -30,7 +30,7 @@ export class OrdersService {
     data: ResponseOrdersData;
   }> {
     // Verify if user don't is inactive
-    const user = await this.userService.findOne(data.userId);
+    const user = await this.userService.findOne(Number(data.userId));
 
     if (user.data === null) {
       throw new HttpException('User Not Avaliable !', HttpStatus.NOT_FOUND);
@@ -81,14 +81,30 @@ export class OrdersService {
     };
   }
 
-  async findByStatus(@Body() data: OrdersData): Promise<{
+  async findByUser(@Body() data: OrdersData): Promise<{
     statusCode: HttpStatus;
     message: string;
     data: OrdersEntity[];
   }> {
     const orders = await this.repository.find({
-      where: { status: data.status },
+      relations: { clientId: true },
+      where: {
+        status: data.status,
+        userId: { id: data?.userId },
+        clientId: { id: data?.clientId },
+        isActive: true,
+      },
+      order: { product: 'DESC' },
+      take: 10,
     });
+
+    if (!orders) {
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Orders fetched successfully',
+        data: [],
+      };
+    }
 
     if (orders) {
       return {

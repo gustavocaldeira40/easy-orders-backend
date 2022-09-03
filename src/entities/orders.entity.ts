@@ -16,10 +16,10 @@ export class OrdersEntity {
   id: number;
 
   @ManyToOne(() => ClientsEntity, (client) => client.orders)
-  clientId: number;
+  clientId: ClientsEntity;
 
   @ManyToOne(() => UsersEntity, (user) => user.orders)
-  userId: number;
+  userId: UsersEntity;
 
   @Column({ nullable: false })
   product: string;
