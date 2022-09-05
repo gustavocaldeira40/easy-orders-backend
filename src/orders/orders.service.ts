@@ -36,17 +36,6 @@ export class OrdersService {
       throw new HttpException('User Not Avaliable !', HttpStatus.NOT_FOUND);
     }
 
-    const orders = await this.repository.findOne({
-      where: { product: data.product },
-    });
-
-    if (orders) {
-      throw new HttpException(
-        'Product or Order already exists !',
-        HttpStatus.CONFLICT,
-      );
-    }
-
     if (!data.status) {
       data.status = 'Waiting';
     }
