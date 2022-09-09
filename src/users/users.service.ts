@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   Body,
   HttpException,
@@ -14,6 +15,8 @@ import { userQuery } from 'src/query/users.query';
 import { UsersEntity } from 'src/entities/user.entity';
 import { CreateUserDto } from 'src/dto/user/create-user.dto';
 import { UpdateUserDto } from 'src/dto/user/update-user.dto';
+
+import { cpf, cnpj } from 'cpf-cnpj-validator';
 
 const saltOrRounds = 10;
 
@@ -165,6 +168,30 @@ export class UsersService {
   }
 
   async update(id: number, data: UpdateUserDto) {
+    const { document } = data;
+
+    console.log('IS VALID', document?.length);
+    // If document don't be valid return error for User
+    if (document?.length !== 11 || 14) {
+      throw new NotFoundException();
+    }
+
+    if (document?.length === 11) {
+      const isValid = cpf.isValid(document);
+      if (isValid) {
+        return true;
+      }
+      return false;
+    }
+
+    if (document?.length === 14) {
+      const isValid = cnpj.isValid(document);
+      if (isValid) {
+        return true;
+      }
+      return false;
+    }
+
     const user = await this.repository.update({ id }, data);
 
     if (!user) {

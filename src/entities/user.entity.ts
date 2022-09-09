@@ -6,10 +6,12 @@ import {
   Entity,
   JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { ClientsEntity } from './client.entity';
+import { FilesEntity } from './files.entity';
 @Entity('users')
 export class UsersEntity {
   @PrimaryGeneratedColumn()
@@ -26,6 +28,12 @@ export class UsersEntity {
 
   @Column()
   password: string;
+
+  @Column({ nullable: true, unique: true })
+  document: string;
+
+  @Column({ nullable: true, unique: true })
+  phoneNumber: string;
 
   @Column({ nullable: true })
   address: string;
@@ -69,7 +77,7 @@ export class UsersEntity {
   @Column({ type: 'boolean', name: 'is_active', default: true, nullable: true })
   isActive: boolean;
 
-  @OneToMany((type) => ClientsEntity, (client) => client.userId, {
+  @OneToMany(() => ClientsEntity, (client) => client.userId, {
     eager: true,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
@@ -83,4 +91,8 @@ export class UsersEntity {
     onUpdate: 'CASCADE',
   })
   orders: OrdersEntity[];
+
+  @OneToOne(() => FilesEntity)
+  @JoinColumn()
+  avatar: string;
 }

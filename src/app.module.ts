@@ -8,9 +8,13 @@ import { MySqlDBConfigService } from './database/orm.service';
 import { AuthModule } from './auth/auth.module';
 import { ClientsModule } from './clients/clients.module';
 import { AppService } from './app.service';
+import { MulterModule } from '@nestjs/platform-express';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
+    MulterModule.register({ dest: './uploads' }),
+
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       useClass: MySqlDBConfigService,
@@ -20,6 +24,7 @@ import { AppService } from './app.service';
     AuthModule,
     ClientsModule,
     OrdersModule,
+    FilesModule,
   ],
 
   controllers: [AppController],

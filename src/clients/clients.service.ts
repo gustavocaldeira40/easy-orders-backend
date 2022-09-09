@@ -7,7 +7,6 @@ import {
   HttpException,
   Body,
   Param,
-  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateClientsDto } from 'src/dto/clients/create-clients.dto';
@@ -20,8 +19,7 @@ export class ClientsService {
     private repository: Repository<ClientsEntity>,
 
     private userService: UsersService,
-  ) // eslint-disable-next-line prettier/prettier
-  {}
+  ) {}
 
   async create(@Body() data: CreateClientsDto): Promise<{
     statusCode: HttpStatus;

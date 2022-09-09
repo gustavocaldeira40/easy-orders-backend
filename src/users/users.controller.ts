@@ -39,15 +39,18 @@ export class UsersController {
   @Post('find-by-email/:email')
   @UseGuards(JwtAuthGuard)
   async findByEmail(@Param('email') email: string) {
-    console.log('TEM EMAIL ', email);
     return this.usersService.findUserByEmail(email);
   }
 
   @Post('verify-nickname/:nickname')
   async verifyNickname(@Param('nickname') nickname: string) {
-    console.log('TEM nickname ', nickname);
     return this.usersService.verifyNickname(nickname);
   }
+
+  // @Get('/avatar/:fileName')
+  // async getAvatar(@Param('fileName') fileName: string) {
+  //   return await this.usersService.getAvatar(fileName);
+  // }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)

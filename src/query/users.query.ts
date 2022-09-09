@@ -3,6 +3,8 @@ export const userQuery = [
   'email',
   'nickname',
   'name',
+  'document',
+  'phoneNumber',
   'address',
   'number',
   'complements',

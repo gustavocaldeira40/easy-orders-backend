@@ -1,5 +1,12 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsEmail, IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 import { CreateUserDto } from './create-user.dto';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
@@ -7,6 +14,8 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @MinLength(4)
   @MaxLength(20)
   name: string;
+
+  avatar?: string;
 
   @IsNotEmpty()
   @MinLength(4)
@@ -17,6 +26,14 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsEmail()
   email: string;
 
-  @IsNotEmpty()
+  @IsOptional()
+  @IsString()
+  document: string;
+
+  @IsOptional()
+  @MaxLength(11)
+  phoneNumber?: string;
+
+  @IsOptional()
   isActive?: boolean;
 }

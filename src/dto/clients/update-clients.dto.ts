@@ -21,7 +21,6 @@ export class UpdateClientDto extends PartialType(CreateClientsDto) {
   document: string;
 
   @IsOptional()
-  // @IsPhoneNumber(null)
   @MaxLength(11)
   phoneNumber?: string;
 

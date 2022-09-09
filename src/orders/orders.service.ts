@@ -1,3 +1,4 @@
+import { ordersQuery } from './../query/orders.query';
 import { UsersService } from 'src/users/users.service';
 import { UpdateOrdersDto } from '../dto/orders/update-orders.dto';
 import { CreateOrdersDto } from '../dto/orders/create-orders.dto';
@@ -11,7 +12,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsSelect, Repository } from 'typeorm';
 import { ResponseOrdersData } from 'src/interfaces/response-orders.interface';
 import { OrdersData } from 'src/interfaces/datas.interface';
 
@@ -59,8 +60,9 @@ export class OrdersService {
   }> {
     const orders = await this.repository.find({
       where: { isActive: true },
-      order: { product: 'ASC' },
-      relations: { userId: true, clientId: true },
+      order: { product: 'DESC' },
+      select: ordersQuery as FindOptionsSelect<OrdersEntity>,
+      take: 10,
     });
 
     return {
