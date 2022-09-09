@@ -14,7 +14,7 @@ export class FilesService {
     private readonly user_service: UsersService,
   ) {}
 
-  async uploadAvatar(file, id: number) {
+  async createAvatar(id: number, file) {
     if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
       throw new HttpException(
         'Only image files are allowed!',
@@ -46,6 +46,14 @@ export class FilesService {
     return res.sendFile(file?.fileName, {
       root: join(__dirname, '../../', 'uploads'),
     });
+  }
+
+  async update(id: number, file) {
+    const oldAvatar = await this.repository.findOne({ where: { userId: id } });
+
+    oldAvatar.isActive = false;
+
+    return this.createAvatar(id, file);
   }
 
   async remove(id: number) {

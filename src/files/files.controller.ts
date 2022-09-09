@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Res,
   UploadedFile,
@@ -20,20 +21,27 @@ import { FilesService } from './files.service';
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
+  @Post(':id')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('file', { ...FileUploadStorage }))
+  async createAvatar(
+    @Param('id') id: number,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.filesService.createAvatar(id, file);
+  }
+
   @Get('avatar/:id')
   @UseGuards(JwtAuthGuard)
   seeUploadedFile(@Param('id') id, @Res() res) {
     return this.filesService.getAvatar(id, res);
   }
 
-  @Post(':id')
+  @Patch(':id')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file', { ...FileUploadStorage }))
-  async upload(
-    @UploadedFile() file: Express.Multer.File,
-    @Param('id') id: number,
-  ) {
-    return this.filesService.uploadAvatar(file, id);
+  update(@Param('id') id: number, @UploadedFile() file: Express.Multer.File) {
+    return this.filesService.update(id, file);
   }
 
   @Delete(':id')
