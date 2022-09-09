@@ -47,11 +47,6 @@ export class UsersController {
     return this.usersService.verifyNickname(nickname);
   }
 
-  // @Get('/avatar/:fileName')
-  // async getAvatar(@Param('fileName') fileName: string) {
-  //   return await this.usersService.getAvatar(fileName);
-  // }
-
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
   update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {

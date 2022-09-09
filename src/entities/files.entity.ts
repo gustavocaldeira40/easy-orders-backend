@@ -21,11 +21,11 @@ export class FilesEntity {
   typeFile: string;
 
   @CreateDateColumn({
-    name: 'upload_at',
+    name: 'created_at',
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
   })
-  uploadAt: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({
     name: 'updated_at',

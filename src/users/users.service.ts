@@ -17,6 +17,7 @@ import { CreateUserDto } from 'src/dto/user/create-user.dto';
 import { UpdateUserDto } from 'src/dto/user/update-user.dto';
 
 import { cpf, cnpj } from 'cpf-cnpj-validator';
+import { FilesEntity } from 'src/entities/files.entity';
 
 const saltOrRounds = 10;
 
@@ -25,6 +26,9 @@ export class UsersService {
   constructor(
     @InjectRepository(UsersEntity)
     private repository: Repository<UsersEntity>,
+
+    @InjectRepository(FilesEntity)
+    private files: Repository<FilesEntity>,
   ) {}
 
   async create(@Body() data: CreateUserDto): Promise<{
@@ -90,7 +94,7 @@ export class UsersService {
     const users = await this.repository.find({
       where: { isActive: true },
       order: { lastLoginAt: 'ASC' },
-      relations: { clients: true, orders: true },
+      relations: { clients: true, orders: true, avatar: true },
       select: userQuery as FindOptionsSelect<UsersEntity>,
     });
 
@@ -104,24 +108,34 @@ export class UsersService {
   async findOne(@Param('id') id: number): Promise<{
     statusCode: HttpStatus;
     message: string;
-    data: UsersEntity;
+    data: { avatar: FilesEntity };
   }> {
     const user = await this.repository.findOne({
       where: { id: id, isActive: true },
       order: {
-        name: 'ASC',
+        name: 'DESC',
       },
       select: userQuery as FindOptionsSelect<UsersEntity>,
+    });
+
+    // Get Avatar
+    const file = await this.files.findOne({
+      where: { userId: id, isActive: true },
+      order: { createdAt: 'DESC' },
+      select: ['fileName', 'typeFile'],
     });
 
     if (!user) {
       throw new HttpException('User not found !', HttpStatus.NOT_FOUND);
     }
 
+    // Concat avatar with user data
+    const data = { avatar: file ? file : null, ...user };
+
     return {
       statusCode: HttpStatus.OK,
       message: 'Users fetched successfully',
-      data: user,
+      data: data,
     };
   }
 

@@ -92,7 +92,7 @@ export class UsersEntity {
   })
   orders: OrdersEntity[];
 
-  @OneToOne(() => FilesEntity)
+  @OneToOne(() => FilesEntity, { cascade: true })
   @JoinColumn()
-  avatar: string;
+  avatar: FilesEntity;
 }

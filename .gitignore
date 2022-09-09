@@ -15,7 +15,7 @@ lerna-debug.log*
 
 #Uploads
 
-.uploads/
+uploads/**
 
 # Tests
 /coverage

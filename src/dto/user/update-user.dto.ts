@@ -15,8 +15,6 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @MaxLength(20)
   name: string;
 
-  avatar?: string;
-
   @IsNotEmpty()
   @MinLength(4)
   @MaxLength(20)
