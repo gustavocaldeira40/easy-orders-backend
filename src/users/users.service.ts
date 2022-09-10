@@ -184,28 +184,25 @@ export class UsersService {
   async update(id: number, data: UpdateUserDto) {
     const { document } = data;
 
-    console.log('IS VALID', document?.length);
-    // If document don't be valid return error for User
-    if (document?.length !== 11 || 14) {
-      throw new NotFoundException();
-    }
+    console.log('LENGTH', document?.length);
 
-    if (document?.length === 11) {
-      const isValid = cpf.isValid(document);
-      if (isValid) {
-        return true;
+    if (document?.length !== undefined) {
+      if (document?.length === 11) {
+        console.log('IS VALI inside', cpf.isValid(document));
+        const isValid = cpf.isValid(document);
+        if (!isValid) {
+          throw new NotFoundException();
+        }
       }
-      return false;
-    }
 
-    if (document?.length === 14) {
-      const isValid = cnpj.isValid(document);
-      if (isValid) {
-        return true;
+      if (document?.length === 14) {
+        console.log('É IGUAL A 14', cnpj.isValid(document));
+        const isValid = cnpj.isValid(document);
+        if (!isValid) {
+          throw new NotFoundException();
+        }
       }
-      return false;
     }
-
     const user = await this.repository.update({ id }, data);
 
     if (!user) {

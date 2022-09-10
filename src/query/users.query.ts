@@ -11,7 +11,7 @@ export const userQuery = [
   'complements',
   'city',
   'state',
-  'country',
+
   'birthday',
   'isActive',
 ];

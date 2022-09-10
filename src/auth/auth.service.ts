@@ -63,7 +63,7 @@ export class AuthService {
       complements,
       city,
       state,
-      country,
+
       clients,
       orders,
       birthday,
@@ -83,7 +83,7 @@ export class AuthService {
         complements,
         city,
         state,
-        country,
+
         clients,
         orders,
         birthday,

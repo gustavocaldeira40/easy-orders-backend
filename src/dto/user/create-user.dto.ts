@@ -55,9 +55,5 @@ export class CreateUserDto {
   state: string;
 
   @IsOptional()
-  @IsString()
-  country: string;
-
-  @IsOptional()
   birthday?: Date;
 }

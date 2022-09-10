@@ -51,9 +51,6 @@ export class UsersEntity {
   state: string;
 
   @Column({ nullable: true })
-  country: string;
-
-  @Column({ nullable: true })
   birthday?: Date;
 
   @CreateDateColumn({
