@@ -14,7 +14,7 @@ export class FilesService {
     private readonly user_service: UsersService,
   ) {}
 
-  async createAvatar(id: number, file) {
+  async createAvatar(id: number, file: Express.Multer.File) {
     if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
       throw new HttpException(
         'Only image files are allowed!',
@@ -29,7 +29,7 @@ export class FilesService {
     };
 
     const files = await this.repository.save(formData);
-    console.log('RESPONSE', files);
+
     return files;
   }
 
@@ -57,7 +57,10 @@ export class FilesService {
   }
 
   async remove(id: number) {
-    const file = await this.repository.findOne({ where: { userId: id } });
+    const file = await this.repository.findOne({
+      where: { userId: id, isActive: true },
+    });
+
     if (!file) {
       throw new HttpException('User Not Found !', HttpStatus.NOT_FOUND);
     }
@@ -65,6 +68,7 @@ export class FilesService {
     file.isActive = false;
 
     await this.repository.save(file);
+
     return 'Sucessfully';
   }
 }
