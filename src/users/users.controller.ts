@@ -1,3 +1,4 @@
+import { ChangePasswordData } from 'src/interfaces/change-password.interface';
 import {
   Controller,
   Get,
@@ -45,6 +46,14 @@ export class UsersController {
   @Post('verify-nickname/:nickname')
   async verifyNickname(@Param('nickname') nickname: string) {
     return this.usersService.verifyNickname(nickname);
+  }
+
+  @Post('change-password/:id')
+  async changePassword(
+    @Param('id') id: number,
+    @Body() data: ChangePasswordData,
+  ) {
+    return this.usersService.changePassword(id, data);
   }
 
   @Patch(':id')

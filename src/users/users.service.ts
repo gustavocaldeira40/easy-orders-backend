@@ -6,6 +6,7 @@ import {
   Injectable,
   Param,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ResponseUsersData } from 'src/interfaces/response-users.interface';
@@ -18,6 +19,7 @@ import { UpdateUserDto } from 'src/dto/user/update-user.dto';
 
 import { cpf, cnpj } from 'cpf-cnpj-validator';
 import { FilesEntity } from 'src/entities/files.entity';
+import { ChangePasswordData } from 'src/interfaces/change-password.interface';
 
 const saltOrRounds = 10;
 
@@ -136,6 +138,57 @@ export class UsersService {
       statusCode: HttpStatus.OK,
       message: 'Users fetched successfully',
       data: data,
+    };
+  }
+
+  async changePassword(id: number, data: ChangePasswordData) {
+    const user = await this.repository.findOne({ where: { id } });
+
+    if (!user) {
+      throw new HttpException("User Don't Exist", HttpStatus.CONFLICT);
+    }
+
+    const validPassword = await bcrypt.compare(data.oldPassword, user.password);
+
+    if (!(await validPassword)) {
+      throw new UnauthorizedException();
+    }
+
+    user.password = await bcrypt.hash(data?.password, saltOrRounds);
+
+    const save = await this.repository.save(user);
+    // Seleciona para retorno somente dos campos determinados e necessarios
+    const {
+      name,
+      email,
+      nickname,
+      address,
+      number,
+      complements,
+      city,
+      state,
+      clients,
+      orders,
+      isActive,
+    } = save;
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'User created successfully',
+      data: {
+        id,
+        name,
+        email,
+        nickname,
+        address,
+        number,
+        complements,
+        city,
+        state,
+        clients,
+        orders,
+        isActive,
+      },
     };
   }
 

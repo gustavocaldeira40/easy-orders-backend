@@ -54,9 +54,5 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   state: string;
 
   @IsOptional()
-  @IsString()
-  country: string;
-
-  @IsOptional()
   birthday?: Date;
 }
