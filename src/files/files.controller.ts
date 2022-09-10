@@ -31,10 +31,10 @@ export class FilesController {
     return this.filesService.createAvatar(id, file);
   }
 
-  @Get('avatar/:id')
-  @UseGuards(JwtAuthGuard)
-  seeUploadedFile(@Param('id') id, @Res() res) {
-    return this.filesService.getAvatar(id, res);
+  @Get('avatar/:fileName')
+  // @UseGuards(JwtAuthGuard)
+  seeUploadedFile(@Param('fileName') fileName, @Res() res) {
+    return this.filesService.getAvatar(fileName, res);
   }
 
   @Patch(':id')

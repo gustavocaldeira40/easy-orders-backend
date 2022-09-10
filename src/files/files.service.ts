@@ -33,9 +33,9 @@ export class FilesService {
     return files;
   }
 
-  async getAvatar(id, res) {
+  async getAvatar(fileName, res) {
     const file = await this.repository.findOne({
-      where: { userId: id, isActive: true },
+      where: { fileName: fileName, isActive: true },
       order: { createdAt: 'DESC' },
     });
 
