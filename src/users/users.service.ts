@@ -174,7 +174,7 @@ export class UsersService {
 
     return {
       statusCode: HttpStatus.OK,
-      message: 'User created successfully',
+      message: 'Password upgrade with sucessfuly !',
       data: {
         id,
         name,
