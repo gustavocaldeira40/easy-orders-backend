@@ -5,6 +5,7 @@ import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { ClientsEntity } from 'src/entities/client.entity';
 import { UsersEntity } from 'src/entities/user.entity';
 import { FilesEntity } from 'src/entities/files.entity';
+import { TokensEntity } from 'src/entities/token.entity';
 
 @Injectable()
 export class MySqlDBConfigService implements TypeOrmOptionsFactory {
@@ -19,7 +20,13 @@ export class MySqlDBConfigService implements TypeOrmOptionsFactory {
       port: this.configService.get<number>('DB_PORT'),
       database: this.configService.get<string>('DB_NAME'),
       synchronize: true,
-      entities: [UsersEntity, ClientsEntity, OrdersEntity, FilesEntity],
+      entities: [
+        UsersEntity,
+        ClientsEntity,
+        OrdersEntity,
+        FilesEntity,
+        TokensEntity,
+      ],
       // entities: [__dirname + '/../entities/*.ts'],
       logging: false,
     };

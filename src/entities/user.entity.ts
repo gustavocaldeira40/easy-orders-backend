@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 import { ClientsEntity } from './client.entity';
 import { FilesEntity } from './files.entity';
+import { TokensEntity } from './token.entity';
 @Entity('users')
 export class UsersEntity {
   @PrimaryGeneratedColumn()
@@ -81,6 +82,14 @@ export class UsersEntity {
   })
   @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
   clients: ClientsEntity[];
+
+  @OneToMany(() => TokensEntity, (token) => token.userId, {
+    eager: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
+  tokens: TokensEntity[];
 
   @OneToMany(() => OrdersEntity, (order) => order.userId, {
     eager: true,

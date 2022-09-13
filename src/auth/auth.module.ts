@@ -1,3 +1,4 @@
+import { TokensEntity } from 'src/entities/token.entity';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -12,7 +13,7 @@ import { UsersEntity } from 'src/entities/user.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UsersEntity]),
+    TypeOrmModule.forFeature([UsersEntity, TokensEntity]),
     UsersModule,
     PassportModule,
     JwtModule.registerAsync({

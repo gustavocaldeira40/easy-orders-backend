@@ -237,8 +237,6 @@ export class UsersService {
   async update(id: number, data: UpdateUserDto) {
     const { document } = data;
 
-    console.log('LENGTH', document?.length);
-
     if (document?.length !== undefined) {
       if (document?.length === 11) {
         console.log('IS VALI inside', cpf.isValid(document));
