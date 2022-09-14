@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 import {
-  Body,
   HttpException,
   HttpStatus,
   Injectable,
@@ -9,12 +8,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ResponseUsersData } from 'src/interfaces/response-users.interface';
 import { FindOptionsSelect, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { userQuery } from 'src/query/users.query';
 import { UsersEntity } from 'src/entities/user.entity';
-import { CreateUserDto } from 'src/dto/user/create-user.dto';
 import { UpdateUserDto } from 'src/dto/user/update-user.dto';
 
 import { cpf, cnpj } from 'cpf-cnpj-validator';
@@ -32,61 +29,6 @@ export class UsersService {
     @InjectRepository(FilesEntity)
     private files: Repository<FilesEntity>,
   ) {}
-
-  async create(@Body() data: CreateUserDto): Promise<{
-    statusCode: HttpStatus;
-    message: string;
-    data: ResponseUsersData;
-  }> {
-    const users = await this.repository.findOne({
-      where: { email: data.email },
-    });
-
-    if (users) {
-      throw new HttpException('User already exists !', HttpStatus.CONFLICT);
-    }
-
-    const user = this.repository.create(data);
-    user.password = await await bcrypt.hash(user.password, saltOrRounds);
-    const saveUser: ResponseUsersData = await this.repository.save(user);
-
-    // Seleciona para retorno somente dos campos determinados e necessarios
-    const {
-      id,
-      name,
-      email,
-      nickname,
-      address,
-      number,
-      complements,
-      city,
-      state,
-      country,
-      clients,
-      orders,
-      isActive,
-    } = saveUser;
-
-    return {
-      statusCode: HttpStatus.OK,
-      message: 'User created successfully',
-      data: {
-        id,
-        name,
-        email,
-        nickname,
-        address,
-        number,
-        complements,
-        city,
-        state,
-        country,
-        clients,
-        orders,
-        isActive,
-      },
-    };
-  }
 
   async findAll(): Promise<{
     statusCode: HttpStatus;
@@ -239,7 +181,6 @@ export class UsersService {
 
     if (document?.length !== undefined) {
       if (document?.length === 11) {
-        console.log('IS VALI inside', cpf.isValid(document));
         const isValid = cpf.isValid(document);
         if (!isValid) {
           throw new NotFoundException();
@@ -247,7 +188,6 @@ export class UsersService {
       }
 
       if (document?.length === 14) {
-        console.log('É IGUAL A 14', cnpj.isValid(document));
         const isValid = cnpj.isValid(document);
         if (!isValid) {
           throw new NotFoundException();

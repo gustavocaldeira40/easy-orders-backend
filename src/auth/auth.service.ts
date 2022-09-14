@@ -8,7 +8,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UsersEntity } from 'src/entities/user.entity';
 import { LoginDto } from 'src/dto/login/login.dto';
 import { TokensEntity } from 'src/entities/token.entity';
+import { CreateUserDto } from 'src/dto/user/create-user.dto';
+import { ResponseUsersData } from 'src/interfaces/response-users.interface';
+import { HttpException } from '@nestjs/common/exceptions';
+import { Body } from '@nestjs/common/decorators';
 
+const saltOrRounds = 10;
 @Injectable()
 export class AuthService {
   constructor(
@@ -21,6 +26,62 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  // Register
+  async create(@Body() data: CreateUserDto): Promise<{
+    statusCode: HttpStatus;
+    message: string;
+    data: ResponseUsersData;
+  }> {
+    const users = await this.repository.findOne({
+      where: { email: data.email },
+    });
+
+    if (users) {
+      throw new HttpException('User already exists !', HttpStatus.CONFLICT);
+    }
+
+    const user = this.repository.create(data);
+    user.password = await await bcrypt.hash(user.password, saltOrRounds);
+    const saveUser: ResponseUsersData = await this.repository.save(user);
+
+    // Seleciona para retorno somente dos campos determinados e necessarios
+    const {
+      id,
+      name,
+      email,
+      nickname,
+      address,
+      number,
+      complements,
+      city,
+      state,
+      country,
+      clients,
+      orders,
+      isActive,
+    } = saveUser;
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'User created successfully',
+      data: {
+        id,
+        name,
+        email,
+        nickname,
+        address,
+        number,
+        complements,
+        city,
+        state,
+        country,
+        clients,
+        orders,
+        isActive,
+      },
+    };
+  }
+
   async login(authLoginDto: LoginDto) {
     const { data } = await this.validateUser(authLoginDto);
 
@@ -32,7 +93,6 @@ export class AuthService {
 
     //  SEARCH FOR UPDATE THE TOKEN
     const old_token = await this.getToken(data?.id);
-    console.log('TOKEN OLD ', old_token);
 
     // IF HAS TOKEN , UPDATE IT
     if (old_token) {
@@ -69,16 +129,15 @@ export class AuthService {
   }
 
   async getToken(id: number) {
-    console.log('ID ', id);
     const token = await this.tokens_repository.findOne({
       where: { userId: { id } },
     });
 
     if (token) {
       // RETURN JUST ACCESS_TOKEN
-      const { access_token } = token;
+      const { access_token, isAuthenticate } = token;
 
-      return access_token;
+      return { access_token, isAuthenticate };
     }
 
     if (!token) {
