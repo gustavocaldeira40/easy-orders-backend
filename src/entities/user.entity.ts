@@ -84,7 +84,7 @@ export class UsersEntity {
   clients: ClientsEntity[];
 
   @OneToMany(() => TokensEntity, (token) => token.userId, {
-    eager: true,
+    // eager: true,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
@@ -92,7 +92,7 @@ export class UsersEntity {
   tokens: TokensEntity[];
 
   @OneToMany(() => OrdersEntity, (order) => order.userId, {
-    eager: true,
+    // eager: true,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })

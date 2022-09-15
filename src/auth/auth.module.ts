@@ -10,10 +10,12 @@ import { UsersModule } from 'src/users/users.module';
 import { JwtStrategy } from './guards/jwt.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersEntity } from 'src/entities/user.entity';
+import { MailModule } from 'src/mail/mail.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UsersEntity, TokensEntity]),
+    MailModule,
     UsersModule,
     PassportModule,
     JwtModule.registerAsync({

@@ -4,12 +4,13 @@ import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { MySqlDBConfigService } from './database/orm.service';
+import { MySqlDBConfigService } from './config/orm.service';
 import { AuthModule } from './auth/auth.module';
 import { ClientsModule } from './clients/clients.module';
 import { AppService } from './app.service';
 import { MulterModule } from '@nestjs/platform-express';
 import { FilesModule } from './files/files.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { FilesModule } from './files/files.module';
     ClientsModule,
     OrdersModule,
     FilesModule,
+    MailModule,
   ],
 
   controllers: [AppController],

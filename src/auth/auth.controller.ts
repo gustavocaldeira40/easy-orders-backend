@@ -13,6 +13,11 @@ export class AuthController {
     return this.authService.create(createUserDto);
   }
 
+  @Post('/forgot-password')
+  forgotPassword(@Body() data: any) {
+    return this.authService.forgotPassword(data);
+  }
+
   @Post('/login')
   async login(@Body() authLoginDto: LoginDto) {
     return this.authService.login(authLoginDto);

@@ -1,4 +1,4 @@
-import { OrdersEntity } from './../entities/orders.entity';
+import { OrdersEntity } from '../entities/orders.entity';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';

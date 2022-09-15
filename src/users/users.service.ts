@@ -56,6 +56,7 @@ export class UsersService {
   }> {
     const user = await this.repository.findOne({
       where: { id: id, isActive: true },
+
       order: {
         name: 'DESC',
       },
@@ -65,6 +66,7 @@ export class UsersService {
     // Get Avatar
     const file = await this.files.findOne({
       where: { userId: id, isActive: true },
+
       order: { createdAt: 'DESC' },
       select: ['fileName', 'typeFile'],
     });

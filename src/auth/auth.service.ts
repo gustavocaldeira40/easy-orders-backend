@@ -12,6 +12,7 @@ import { CreateUserDto } from 'src/dto/user/create-user.dto';
 import { ResponseUsersData } from 'src/interfaces/response-users.interface';
 import { HttpException } from '@nestjs/common/exceptions';
 import { Body } from '@nestjs/common/decorators';
+import { MailService } from 'src/mail/mail.service';
 
 const saltOrRounds = 10;
 @Injectable()
@@ -22,6 +23,8 @@ export class AuthService {
 
     @InjectRepository(TokensEntity)
     private tokens_repository: Repository<TokensEntity>,
+
+    private mailService: MailService,
 
     private jwtService: JwtService,
   ) {}
@@ -80,6 +83,22 @@ export class AuthService {
         isActive,
       },
     };
+  }
+
+  async forgotPassword(data: any) {
+    // const user = await this.repository.findOne({
+    //   where: { email: data.email },
+    // });
+    // const { email, name } = user;
+    // console.log('USER ', user);
+
+    const user = {
+      name: 'Gustavo Texte',
+      email: data?.email,
+    };
+
+    const response = await this.mailService.sendUserPasswordReset(user);
+    return { user, response };
   }
 
   async login(authLoginDto: LoginDto) {
