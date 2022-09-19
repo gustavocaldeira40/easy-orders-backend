@@ -1,4 +1,3 @@
-import { UserFieldsResponse } from './../../dist/interfaces/user-fields-response.d';
 import { Repository } from 'typeorm';
 import { Injectable, UnauthorizedException, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -13,6 +12,7 @@ import { ResponseUsersData } from 'src/interfaces/response-users.interface';
 import { HttpException } from '@nestjs/common/exceptions';
 import { Body } from '@nestjs/common/decorators';
 import { MailService } from 'src/mail/mail.service';
+import { ValidateUserData } from 'src/interfaces/validate-user';
 
 const saltOrRounds = 10;
 @Injectable()
@@ -92,13 +92,15 @@ export class AuthService {
     // const { email, name } = user;
     // console.log('USER ', user);
 
+    console.log('user email', data?.email);
     const user = {
       name: 'Gustavo Texte',
       email: data?.email,
     };
 
-    const response = await this.mailService.sendUserPasswordReset(user);
-    return { user, response };
+    // If send return true if not return false
+    const send = await this.mailService.sendUserPasswordReset(user);
+    return { user, send };
   }
 
   async login(authLoginDto: LoginDto) {
@@ -167,7 +169,7 @@ export class AuthService {
   async validateUser(userLoginDto: LoginDto): Promise<{
     statusCode: HttpStatus;
     message: string;
-    data: UserFieldsResponse;
+    data: ValidateUserData;
   }> {
     const user: UsersEntity = await this.repository.findOne({
       where: { email: userLoginDto.email, nickname: userLoginDto.nickname },
@@ -221,8 +223,7 @@ export class AuthService {
         clients,
         orders,
         birthday,
-        isActive,
-      } as UserFieldsResponse,
+      },
     };
   }
 }
