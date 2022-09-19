@@ -6,6 +6,8 @@ import { ClientsEntity } from 'src/entities/client.entity';
 import { UsersEntity } from 'src/entities/user.entity';
 import { FilesEntity } from 'src/entities/files.entity';
 import { TokensEntity } from 'src/entities/token.entity';
+import { join, resolve } from 'path';
+import { CodeVerificationEntity } from 'src/entities/code-verification.entity';
 
 @Injectable()
 export class MySqlDBConfigService implements TypeOrmOptionsFactory {
@@ -26,8 +28,8 @@ export class MySqlDBConfigService implements TypeOrmOptionsFactory {
         OrdersEntity,
         FilesEntity,
         TokensEntity,
+        CodeVerificationEntity,
       ],
-      // entities: [__dirname + '/../entities/*.ts'],
       logging: false,
     };
   }

@@ -86,21 +86,21 @@ export class AuthService {
   }
 
   async forgotPassword(data: any) {
-    // const user = await this.repository.findOne({
-    //   where: { email: data.email },
-    // });
-    // const { email, name } = user;
-    // console.log('USER ', user);
+    const user = await this.repository.findOne({
+      where: { email: data.email },
+    });
 
-    console.log('user email', data?.email);
-    const user = {
-      name: 'Gustavo Texte',
-      email: data?.email,
-    };
+    if (!user) {
+      throw new HttpException(
+        'No registered user in email',
+        HttpStatus.NOT_FOUND,
+      );
+    }
 
     // If send return true if not return false
     const send = await this.mailService.sendUserPasswordReset(user);
-    return { user, send };
+
+    return { send };
   }
 
   async login(authLoginDto: LoginDto) {

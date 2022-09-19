@@ -17,10 +17,12 @@ import { MailModule } from './mail/mail.module';
     MulterModule.register({ dest: './uploads' }),
 
     ConfigModule.forRoot({ isGlobal: true }),
+
     TypeOrmModule.forRootAsync({
       useClass: MySqlDBConfigService,
       inject: [MySqlDBConfigService],
     }),
+
     UsersModule,
     AuthModule,
     ClientsModule,

@@ -13,6 +13,7 @@ import {
 import { ClientsEntity } from './client.entity';
 import { FilesEntity } from './files.entity';
 import { TokensEntity } from './token.entity';
+import { CodeVerificationEntity } from './code-verification.entity';
 @Entity('users')
 export class UsersEntity {
   @PrimaryGeneratedColumn()
@@ -84,7 +85,6 @@ export class UsersEntity {
   clients: ClientsEntity[];
 
   @OneToMany(() => TokensEntity, (token) => token.userId, {
-    // eager: true,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
@@ -92,11 +92,16 @@ export class UsersEntity {
   tokens: TokensEntity[];
 
   @OneToMany(() => OrdersEntity, (order) => order.userId, {
-    // eager: true,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   orders: OrdersEntity[];
+
+  @OneToMany(() => CodeVerificationEntity, (code) => code.userId, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  codes: CodeVerificationEntity[];
 
   @OneToOne(() => FilesEntity, { cascade: true })
   @JoinColumn()
