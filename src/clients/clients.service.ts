@@ -50,7 +50,7 @@ export class ClientsService {
 
     return {
       statusCode: HttpStatus.OK,
-      message: 'User created successfully',
+      message: 'Client created successfully',
       data: saveClient,
     };
   }
