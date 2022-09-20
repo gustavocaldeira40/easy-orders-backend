@@ -224,7 +224,6 @@ export class AuthService {
       clients,
       orders,
       birthday,
-      isActive,
     } = user;
 
     return {
