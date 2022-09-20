@@ -1,3 +1,4 @@
+import { UsersEntity } from 'src/entities/user.entity';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -41,7 +42,6 @@ export class MailService {
       subject: 'Redefinição de senha',
       template: 'forgot-password-code',
       context: {
-        name: user?.name,
         code,
       },
     });

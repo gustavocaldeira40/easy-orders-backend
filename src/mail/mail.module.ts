@@ -6,6 +6,7 @@ import { MailService } from './mail.service';
 import { ConfigService } from '@nestjs/config';
 import { CodeVerificationEntity } from 'src/entities/code-verification.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersEntity } from 'src/entities/user.entity';
 
 @Module({
   imports: [
@@ -36,7 +37,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         },
       }),
     }),
-    TypeOrmModule.forFeature([CodeVerificationEntity]),
+    TypeOrmModule.forFeature([CodeVerificationEntity, UsersEntity]),
   ],
 
   controllers: [],

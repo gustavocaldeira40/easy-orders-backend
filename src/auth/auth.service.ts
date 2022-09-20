@@ -1,3 +1,4 @@
+import { CodeVerificationEntity } from 'src/entities/code-verification.entity';
 import { Repository } from 'typeorm';
 import { Injectable, UnauthorizedException, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -23,6 +24,9 @@ export class AuthService {
 
     @InjectRepository(TokensEntity)
     private tokens_repository: Repository<TokensEntity>,
+
+    @InjectRepository(CodeVerificationEntity)
+    private code_verification_repository: Repository<CodeVerificationEntity>,
 
     private mailService: MailService,
 
@@ -101,6 +105,23 @@ export class AuthService {
     const send = await this.mailService.sendUserPasswordReset(user);
 
     return { send };
+  }
+
+  async verifyCode(code: number) {
+    const code_verification = await this.code_verification_repository.findOne({
+      where: {
+        code: code,
+      },
+    });
+
+    if (!code_verification) {
+      throw new HttpException('Code is not valid', HttpStatus.NOT_FOUND);
+    }
+
+    if (Number(code) === Number(code_verification.code)) {
+      return true;
+    }
+    return false;
   }
 
   async login(authLoginDto: LoginDto) {

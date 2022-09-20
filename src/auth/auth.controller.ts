@@ -1,6 +1,7 @@
 import { Controller, Body, Post, UseGuards, Get, Param } from '@nestjs/common';
 import { LoginDto } from 'src/dto/login/login.dto';
 import { CreateUserDto } from 'src/dto/user/create-user.dto';
+import { ForgotPasswordData } from 'src/interfaces/forgot-password.interface';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
@@ -14,8 +15,13 @@ export class AuthController {
   }
 
   @Post('/forgot-password')
-  forgotPassword(@Body() data: any) {
+  forgotPassword(@Body() data: ForgotPasswordData) {
     return this.authService.forgotPassword(data);
+  }
+
+  @Post('/verify-code/:code')
+  verifyCode(@Param('code') code: number) {
+    return this.authService.verifyCode(code);
   }
 
   @Post('/login')

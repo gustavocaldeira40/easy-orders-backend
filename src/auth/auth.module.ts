@@ -11,10 +11,15 @@ import { JwtStrategy } from './guards/jwt.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersEntity } from 'src/entities/user.entity';
 import { MailModule } from 'src/mail/mail.module';
+import { CodeVerificationEntity } from 'src/entities/code-verification.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UsersEntity, TokensEntity]),
+    TypeOrmModule.forFeature([
+      UsersEntity,
+      TokensEntity,
+      CodeVerificationEntity,
+    ]),
     MailModule,
     UsersModule,
     PassportModule,

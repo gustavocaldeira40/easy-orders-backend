@@ -17,7 +17,7 @@ export class CodeVerificationEntity {
   @ManyToOne(() => UsersEntity, (user) => user.id)
   userId: UsersEntity;
 
-  @Column({})
+  @Column()
   code: number;
 
   @CreateDateColumn({
